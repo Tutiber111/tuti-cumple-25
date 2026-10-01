@@ -55,7 +55,7 @@ nav.top .btn{margin-left:auto}
 .hero .ctas{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:32px}
 .hero .meta{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:18px}
 .shot{margin:56px auto 0;max-width:880px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#0b0b0b;aspect-ratio:16/10;position:relative}
-.shot img{width:100%;height:100%;object-fit:cover;object-position:center 28%}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:center 32%}
 .shot .tag{position:absolute;left:16px;bottom:14px;font-family:var(--f-mono);font-size:11px;color:#EDEDE8;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:4px 8px}
 
 .trust{padding-block:36px;border-block:1px solid var(--line);margin-top:72px}
@@ -106,6 +106,7 @@ section.s + section.s{padding-top:0}
 .older{margin-top:32px;padding-top:20px;border-top:1px dashed var(--line);font-family:var(--f-mono);font-size:13px;color:var(--muted);display:grid;gap:6px}
 .older div{display:flex;gap:16px}
 .older b{font-weight:500;color:var(--fg);min-width:64px}
+.older .hl span{color:var(--fg);background:color-mix(in srgb,var(--accent) 16%,transparent);border-radius:4px;padding:0 6px;margin-left:-6px}
 
 .compat{display:grid;grid-template-columns:minmax(0,720px);gap:24px;align-items:start}
 .compat > *{min-width:0}
@@ -143,7 +144,8 @@ section.s + section.s{padding-top:0}
 .steps i{font-style:normal;font-family:var(--f-mono);color:var(--accent)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:30px}
 form#form{display:grid;gap:22px}
-.field{display:grid;gap:7px}
+.field{display:grid;gap:7px;min-width:0}
+.field > *{min-width:0}
 .field > label,.lbl{font-size:14px;font-weight:600}
 .hint{font-size:13px;color:var(--muted);font-weight:400}
 input[type=text],textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;width:100%}
@@ -230,7 +232,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     <a class="btn lg ghost" href="#changelog">Ver release notes</a>
   </div>
   <p class="meta">Domingo 1 de noviembre al mediodía · Jaramillo 2970 · Hamburguesas</p>
-  <div class="shot"><img src="img/p14.jpg" alt="Tuti sonriendo con una escopeta"><span class="tag">tuti-25-hero.jpg</span></div>
+  <div class="shot"><img src="img/hero-range.jpg" alt="Tuti disparando en un polígono de tiro"><span class="tag">tuti-25-hero.jpg</span></div>
 </header>
 
 <div class="trust"><div class="wrap">
@@ -268,6 +270,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     <figure><div class="frame"><img src="img/p9.jpg" alt="Tuti mirando el mar" loading="lazy"></div><figcaption><span>press-05.jpg</span><span>JPG</span></figcaption></figure>
     <figure class="wide"><div class="frame"><img src="img/p6.jpg" alt="Tuti y dos amigos en la playa" loading="lazy"></div><figcaption><span>press-06.jpg</span><span>JPG</span></figcaption></figure>
     <figure><div class="frame"><img src="img/p15.jpg" alt="Tuti pensativo con la mano en el mentón" loading="lazy"></div><figcaption><span>press-07.jpg</span><span>JPG</span></figcaption></figure>
+    <figure class="wide"><div class="frame"><img src="img/p14.jpg" alt="Tuti sonriendo con una escopeta" loading="lazy"></div><figcaption><span>press-12.jpg</span><span>JPG</span></figcaption></figure>
     <figure><div class="frame"><img src="img/p7.jpg" alt="Tuti de smoking y moño" loading="lazy"></div><figcaption><span>press-08.jpg</span><span>JPG</span></figcaption></figure>
     <figure><div class="frame"><img src="img/p2.jpg" alt="Tuti de saco frente a un lago" loading="lazy"></div><figcaption><span>press-09.jpg</span><span>JPG</span></figcaption></figure>
     <figure><div class="frame"><img src="img/p0.jpg" alt="Tuti en un bar con Luna" loading="lazy"></div><figcaption><span>press-10.jpg</span><span>JPG</span></figcaption></figure>
@@ -284,10 +287,10 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
         <div class="c-new"><h4>Nuevo</h4><ul><li>Primer cuarto de siglo completado.</li><li>Se puede alquilar un auto sin recargo por edad.</li></ul></div>
         <div class="c-imp"><h4>Mejoras</h4><ul><li>Criterio general: +4%.</li><li>Tiempo de recuperación después de una salida: ahora 2 días.</li></ul></div>
         <div class="c-fix"><h4>Correcciones</h4><ul><li>La edad ya no termina en 4.</li></ul></div>
-        <div class="c-dep"><h4>Obsoleto</h4><ul><li>Salir un martes y trabajar el miércoles como si nada.</li><li>Comer cualquier cosa a las 4 AM sin consecuencias.</li></ul></div>
-        <div class="c-bug"><h4>Problemas conocidos</h4><ul><li>Los mensajes se contestan con hasta 3 días de demora.</li><li>El modo de bajo consumo puede activarse sin aviso.</li></ul></div>
+        <div class="c-dep"><h4>Obsoleto</h4><ul><li>Entrar a boliches.</li><li>Subir escaleras.</li></ul></div>
+        <div class="c-bug"><h4>Problemas conocidos</h4><ul><li>Los mensajes se contestan con hasta 3 días de demora.</li><li>Dice lo que piensa sin filtros.</li></ul></div>
       </div>
-      <div class="older"><div><b>v24.0</b><span>Mantenimiento general</span></div><div><b>v22.0</b><span>Se graduó</span></div><div><b>v18.0</b><span>Habilitado para votar y manejar</span></div><div><b>v3.0</b><span>Se agregó un riñón</span></div><div><b>v1.0</b><span>Lanzamiento inicial</span></div></div>
+      <div class="older"><div><b>v24.0</b><span>Mantenimiento general</span></div><div><b>v22.0</b><span>Se graduó</span></div><div><b>v18.0</b><span>Habilitado para votar y manejar</span></div><div class="hl"><b>v3.0</b><span>Se agregó un riñón</span></div><div><b>v1.0</b><span>Lanzamiento inicial</span></div></div>
     </div>
   </div>
 </div></section>
@@ -409,6 +412,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     $('#plus-wrap').hidden = form.plus.value !== 'si';
   }
   form.addEventListener('change', syncForm);
+  syncForm();
+  window.addEventListener('pageshow', syncForm);
   function collect(){
     const going = form.viene.value !== 'no';
     const plus = going && form.plus.value === 'si';
