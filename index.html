@@ -352,8 +352,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
       </div>
     </div>
     <div class="card">
-      <form id="form" name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
-        <input type="hidden" name="form-name" value="rsvp">
+      <form id="form" novalidate>
         <p hidden><label>No completar: <input name="bot-field"></label></p>
         <div class="field">
           <label for="nombre">Nombre</label>
@@ -434,6 +433,17 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
   d.addEventListener('click', e => { if (e.target === d) d.close(); });
 })();
 </script>
+<!-- Netlify Forms: plantilla oculta solo para detectar el formulario y nombrar los campos. El envío real lo hace el script. -->
+<form name="rsvp" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <label>Nombre <input type="text" name="nombre"></label>
+  <label>¿Viene? <input type="text" name="viene"></label>
+  <label>¿Trae +1? <input type="text" name="plus"></label>
+  <label>Nombre del +1 <input type="text" name="acompanante"></label>
+  <label>Restricciones alimenticias <input type="text" name="restricciones"></label>
+  <label>Mensaje <textarea name="mensaje"></textarea></label>
+  <input type="text" name="bot-field">
+</form>
+
 <footer><div class="wrap">
   <span>© 2026 Tuti. Todos los derechos reservados.</span>
   <span class="mono">v25.0 · build estable</span>
