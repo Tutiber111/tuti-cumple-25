@@ -180,6 +180,20 @@ fieldset{border:0;margin:0;padding:0;display:grid;gap:9px;min-width:0}
 .reveal{margin:0;display:grid;gap:10px;justify-items:start}
 .reveal img{width:100%;border-radius:12px;border:1px solid var(--line)}
 .reveal figcaption{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.incl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.incl > div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;min-height:140px}
+.incl .tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;color:var(--ok)}
+.incl h3{font-size:20px;line-height:1.15}
+.incl p{color:var(--muted);font-size:14px;margin-top:-4px}
+.incl .more{background:transparent;border-style:dashed}
+.incl .more .tag{color:var(--muted)}
+.linkbtn{font:inherit;font-size:14px;font-weight:600;color:var(--accent);background:none;border:0;padding:0;margin-top:10px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+dialog#dc{border:1px solid var(--line);border-radius:18px;padding:0;background:var(--surface);color:var(--fg);max-width:min(440px,calc(100vw - 32px));width:100%}
+dialog#dc::backdrop{background:rgba(0,0,0,.6)}
+dialog#dc img{width:100%;display:block}
+dialog#dc .dc-body{padding:16px 20px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+dialog#dc .dc-body p{font-weight:600}
+@media (max-width:860px){.incl{grid-template-columns:repeat(2,minmax(0,1fr))}.incl .more{grid-column:span 2;min-height:0}}
 .panel{margin-top:48px}
 .panel h3{font-size:18px}
 .panel .tot{color:var(--muted);margin:6px 0 16px;font-size:14px}
@@ -220,7 +234,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
 <nav class="top"><div class="wrap">
   <a class="logo" href="#top"><i></i>tuti<sup>v25</sup></a>
-  <div class="navlinks"><a href="#producto">Producto</a><a href="#changelog">Changelog</a><a href="#compatibilidad">Compatibilidad</a><a href="#faq">FAQ</a></div>
+  <div class="navlinks"><a href="#producto">Producto</a><a href="#changelog">Changelog</a><a href="#incluye">Qué incluye</a><a href="#compatibilidad">Compatibilidad</a><a href="#faq">FAQ</a></div>
   <a class="btn" href="#rsvp">Confirmar</a>
 </div></nav>
 
@@ -290,8 +304,19 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
         <div class="c-dep"><h4>Obsoleto</h4><ul><li>Entrar a boliches.</li><li>Subir escaleras.</li></ul></div>
         <div class="c-bug"><h4>Problemas conocidos</h4><ul><li>Los mensajes se contestan con hasta 3 días de demora.</li><li>Dice lo que piensa sin filtros.</li></ul></div>
       </div>
-      <div class="older"><div><b>v24.0</b><span>Mantenimiento general</span></div><div><b>v23.0</b><span>Deshabilitado de tomar</span></div><div><b>v22.0</b><span>Se graduó</span></div><div><b>v18.0</b><span>Habilitado para tomar</span></div><div><b>v17.0</b><span>Chocó el Etios de su madre</span></div><div class="hl"><b>v3.0</b><span>Se agregó un riñón</span></div><div><b>v1.0</b><span>Lanzamiento inicial</span></div></div>
+      <div class="older"><div><b>v24.0</b><span>Mantenimiento general</span></div><div><b>v23.0</b><span>Deshabilitado para tomar</span></div><div><b>v22.0</b><span>Se graduó</span></div><div><b>v18.0</b><span>Habilitado para tomar</span></div><div><b>v17.0</b><span>Chocó el Etios de su madre</span></div><div class="hl"><b>v3.0</b><span>Se agregó un riñón</span></div><div><b>v1.0</b><span>Lanzamiento inicial</span></div></div>
     </div>
+  </div>
+</div></section>
+
+<section class="s" id="incluye"><div class="wrap">
+  <div class="s-head"><span class="kicker">Qué incluye</span><h2>Qué esperar del evento</h2><p>Funciones disponibles en el lanzamiento.</p></div>
+  <div class="incl">
+    <div><span class="tag">INCLUIDO</span><h3>Trivia de Tuti</h3></div>
+    <div><span class="tag">INCLUIDO</span><h3>Luna</h3></div>
+    <div><span class="tag">INCLUIDO</span><h3>Vóley en la pileta</h3><p>Traé malla.</p></div>
+    <div><span class="tag">INCLUIDO</span><h3>Iker</h3></div>
+    <div class="more"><span class="tag">PRÓXIMAMENTE</span><h3>Y más…</h3></div>
   </div>
 </div></section>
 
@@ -392,10 +417,23 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     <div><h3>¿Hay que llevar regalo?</h3><p>No es obligatorio. Tampoco está prohibido.</p></div>
     <div><h3>¿Puedo llevar a alguien?</h3><p>Sí. Indicá un +1 en el formulario.</p></div>
     <div><h3>¿Va a estar Luna?</h3><p>Sí.</p></div>
-    <div class="faq-img"><h3>¿Hay dress code?</h3><p>No.</p><img src="img/p10.jpg" alt="Tuti y un amigo de smoking, espalda con espalda, haciendo pistolas con los dedos" loading="lazy"></div>
+    <div><h3>¿Hay dress code?</h3><p>Sí.</p><button class="linkbtn" type="button" id="dc-open">Más información</button></div>
   </div>
 </div></section>
 
+<dialog id="dc" aria-label="Dress code">
+  <img src="img/p10.jpg" alt="Tuti y un amigo de smoking, espalda con espalda, haciendo pistolas con los dedos" loading="lazy">
+  <div class="dc-body"><p>Dress code: smoking.</p><button class="btn ghost" type="button" id="dc-close">Cerrar</button></div>
+</dialog>
+
+<script>
+(function(){
+  const d = document.getElementById('dc');
+  document.getElementById('dc-open').addEventListener('click', () => { if (d.showModal) d.showModal(); else d.setAttribute('open',''); });
+  document.getElementById('dc-close').addEventListener('click', () => d.close ? d.close() : d.removeAttribute('open'));
+  d.addEventListener('click', e => { if (e.target === d) d.close(); });
+})();
+</script>
 <footer><div class="wrap">
   <span>© 2026 Tuti. Todos los derechos reservados.</span>
   <span class="mono">v25.0 · build estable</span>
