@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Tuti 25. Un año más de experiencia. Mismo hardware.">
+<title>Tuti cumple 25</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: deadpan product-launch site — sticky nav, big hero with product shot, spec sheet, feature grid, press kit, changelog, compatibility + live status, access-request form, FAQ. */
+:root{
+  --bg:#F4F4F1; --surface:#FFFFFF; --fg:#131312; --muted:#6A6A64; --line:#E1E0DA; --accent:#FF5A1A; --accent-fg:#FFFFFF; --ok:#14965A; --warn:#B7791F; --bad:#D9452B; --fix:#3E6FF0;
+  --f-sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0F0E;--surface:#191917;--fg:#F1F1EC;--muted:#9B9A93;--line:#2B2B28;--accent:#FF6B2E;--accent-fg:#140A04;--ok:#3CCB86;--warn:#E3A948;--bad:#F06A4F;--fix:#7B9CFF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F0F0E;--surface:#191917;--fg:#F1F1EC;--muted:#9B9A93;--line:#2B2B28;--accent:#FF6B2E;--accent-fg:#140A04;--ok:#3CCB86;--warn:#E3A948;--bad:#F06A4F;--fix:#7B9CFF;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:24px;padding-block:0}
+h1,h2,h3,h4{text-wrap:balance;margin:0;letter-spacing:-.025em;font-weight:600}
+p{margin:0}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--f-mono)}
+.kicker{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:28px;height:58px}
+.logo{font-weight:700;font-size:19px;letter-spacing:-.04em;text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo i{width:18px;height:18px;border-radius:5px;background:var(--accent);display:inline-block}
+.logo sup{font-family:var(--f-mono);font-weight:500;font-size:10px;color:var(--muted);letter-spacing:0}
+.navlinks{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+.navlinks a{text-decoration:none}
+.navlinks a:hover{color:var(--fg)}
+nav.top .btn{margin-left:auto}
+.btn{font:inherit;font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1px solid var(--fg);background:var(--fg);color:var(--bg);cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--fg);opacity:1}
+.btn.lg{font-size:16px;padding:13px 22px}
+.btn:disabled{opacity:.5;cursor:default}
+
+.hero{padding-block:72px 0;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:10px;font-size:13px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 14px 5px 6px;text-decoration:none}
+.pill b{font-family:var(--f-mono);font-weight:500;font-size:11px;background:var(--accent);color:var(--accent-fg);border-radius:999px;padding:2px 8px;letter-spacing:.04em}
+.hero h1{font-size:clamp(60px,11vw,128px);line-height:.95;letter-spacing:-.055em;margin-top:24px}
+.hero h1 span{color:var(--accent)}
+.hero .sub{font-size:clamp(18px,2.4vw,22px);color:var(--muted);max-width:34ch;margin:20px auto 0}
+.hero .ctas{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero .meta{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:18px}
+.shot{margin:56px auto 0;max-width:880px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#0b0b0b;aspect-ratio:16/10;position:relative}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:center 22%}
+.shot .tag{position:absolute;left:16px;bottom:14px;font-family:var(--f-mono);font-size:11px;color:#EDEDE8;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:4px 8px}
+
+.trust{padding-block:36px;border-block:1px solid var(--line);margin-top:72px}
+.trust .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 40px}
+.trust p{font-size:13px;color:var(--muted);width:100%;text-align:center}
+.trust span{font-weight:700;font-size:20px;letter-spacing:-.04em;color:var(--muted)}
+
+section.s{padding-block:96px}
+section.s + section.s{padding-top:0}
+.s-head{max-width:640px;margin-bottom:44px}
+.s-head h2{font-size:clamp(34px,5vw,52px);line-height:1.05;margin-top:12px}
+.s-head p{color:var(--muted);font-size:18px;margin-top:14px}
+
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;border-top:1px solid var(--line);margin:0}
+.specs > div{display:grid;grid-template-columns:170px 1fr;gap:16px;padding-block:16px;border-bottom:1px solid var(--line)}
+.specs dt{color:var(--muted);font-size:14px}
+.specs dd{margin:0;font-weight:500}
+.specs dd small{display:block;font-weight:400;color:var(--muted);font-size:14px}
+
+.features{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:64px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.feat .img{aspect-ratio:4/3;overflow:hidden;background:var(--line)}
+.feat img{width:100%;height:100%;object-fit:cover}
+.feat .txt{padding:20px 22px 24px}
+.feat h3{font-size:20px}
+.feat p{color:var(--muted);margin-top:4px}
+
+.press{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;grid-auto-flow:dense}
+.press figure{margin:0;min-width:0}
+.press .frame{aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--line);border:1px solid var(--line)}
+.press img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.press figure:hover img{transform:scale(1.03)}
+.press figcaption{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:8px}
+.press figure.wide{grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column}
+.press figure.wide .frame{aspect-ratio:auto;flex:1}
+
+.changelog{display:grid;grid-template-columns:200px 1fr;gap:40px;border-top:1px solid var(--line);padding-top:32px}
+.changelog > *{min-width:0}
+.rel h3{font-family:var(--f-mono);font-size:22px;font-weight:500;letter-spacing:-.01em}
+.rel p{font-size:14px;color:var(--muted);margin-top:4px}
+.rel .latest{display:inline-block;margin-top:10px;font-family:var(--f-mono);font-size:11px;color:var(--ok);border:1px solid currentColor;border-radius:999px;padding:1px 8px}
+.log{display:grid;gap:26px}
+.log h4{margin:0 0 10px;font-family:var(--f-mono);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.log h4::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c)}
+.log ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.log li::marker{color:var(--muted)}
+.c-new{--c:var(--accent)} .c-imp{--c:var(--ok)} .c-fix{--c:var(--fix)} .c-dep{--c:var(--muted)} .c-bug{--c:var(--warn)}
+.older{margin-top:32px;padding-top:20px;border-top:1px dashed var(--line);font-family:var(--f-mono);font-size:13px;color:var(--muted);display:grid;gap:6px}
+.older div{display:flex;gap:16px}
+.older b{font-weight:500;color:var(--fg);min-width:64px}
+
+.compat{display:grid;grid-template-columns:minmax(0,720px);gap:24px;align-items:start}
+.compat > *{min-width:0}
+.tbl{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;font-size:15px}
+.tbl th,.tbl td{text-align:left;padding:13px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl th{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.st{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;white-space:nowrap}
+.st::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sc)}
+.st.ok{--sc:var(--ok)} .st.warn{--sc:var(--warn)} .st.no{--sc:var(--bad)}
+.status{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+.status .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.status h3{font-size:15px}
+.live{font-family:var(--f-mono);font-size:11px;color:var(--ok);display:inline-flex;align-items:center;gap:6px}
+.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.big{font-size:56px;font-weight:600;letter-spacing:-.05em;line-height:1;margin-top:18px;font-variant-numeric:tabular-nums}
+.big small{font-size:15px;font-weight:400;color:var(--muted);letter-spacing:0;margin-left:6px}
+.bars{display:flex;gap:3px;margin-top:18px;height:26px}
+.bars i{flex:1;border-radius:2px;background:var(--line)}
+.bars i.on{background:var(--ok)}
+.bars i.maybe{background:var(--warn)}
+.legend{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:8px}
+.names{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.names span{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.names .empty{border:0;padding:0;color:var(--muted)}
+
+.rsvp{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:start}
+.rsvp > *{min-width:0}
+.rsvp .s-head{margin-bottom:28px}
+.steps{display:grid;gap:14px;font-size:15px;color:var(--muted)}
+.steps div{display:grid;grid-template-columns:26px 1fr;gap:10px}
+.steps b{color:var(--fg);font-weight:500}
+.steps i{font-style:normal;font-family:var(--f-mono);color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:30px}
+form#form{display:grid;gap:22px}
+.field{display:grid;gap:7px}
+.field > label,.lbl{font-size:14px;font-weight:600}
+.hint{font-size:13px;color:var(--muted);font-weight:400}
+input[type=text],textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;width:100%}
+textarea{min-height:84px;resize:vertical}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--fg)}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:9px;min-width:0}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;width:max-content;max-width:100%}
+.seg input,.chk input{position:absolute;opacity:0;pointer-events:none}
+.seg label{cursor:pointer;font-size:14px;font-weight:500;padding:7px 14px;border-radius:8px;color:var(--muted)}
+.seg input:checked + label{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12),0 0 0 1px var(--line)}
+.seg input:focus-visible + label,.chk input:focus-visible + label{outline:2px solid var(--accent);outline-offset:2px}
+.chks{display:flex;flex-wrap:wrap;gap:8px}
+.chk label{cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:14px;border:1px solid var(--line);border-radius:999px;padding:6px 13px}
+.chk label::before{content:"";width:13px;height:13px;border:1.5px solid var(--muted);border-radius:4px;flex:none}
+.chk input:checked + label{border-color:var(--fg)}
+.chk input:checked + label::before{background:var(--accent);border-color:var(--accent)}
+.submit{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.msg{font-size:14px;font-weight:500}
+.msg.err{color:var(--bad)}
+.done{display:grid;gap:16px}
+.done .check{width:44px;height:44px;border-radius:50%;background:var(--ok);color:var(--surface);display:grid;place-items:center;font-size:22px;font-weight:700}
+.done h3{font-size:26px}
+.done p{color:var(--muted)}
+.done pre{white-space:pre-wrap;font-family:var(--f-mono);font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;margin:0}
+.done .row{display:flex;flex-wrap:wrap;gap:10px}
+
+.panel{margin-top:48px}
+.panel h3{font-size:18px}
+.panel .tot{color:var(--muted);margin:6px 0 16px;font-size:14px}
+.panel table{min-width:680px}
+
+.faq{display:grid;grid-template-columns:repeat(2,1fr);gap:0 48px;border-top:1px solid var(--line)}
+.faq div{padding-block:22px;border-bottom:1px solid var(--line)}
+.faq h3{font-size:17px}
+.faq p{color:var(--muted);margin-top:6px}
+
+footer{border-top:1px solid var(--line);padding-block:32px 48px;font-size:13px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+@media (max-width:860px){
+  .navlinks{display:none}
+  .specs,.faq,.compat,.rsvp,.changelog{grid-template-columns:1fr}
+  .changelog{gap:20px}
+  .press{grid-template-columns:repeat(2,1fr)}
+  .press figure.wide{grid-row:auto}
+  .press figure.wide .frame{aspect-ratio:4/3;flex:none}
+}
+@media (max-width:560px){
+  .wrap{padding-inline:16px}
+  .features{grid-template-columns:1fr}
+  .specs > div{grid-template-columns:1fr;gap:2px}
+  section.s{padding-block:72px}
+  .card{padding:20px}
+  .seg{width:100%}
+  .shot{border-radius:14px;aspect-ratio:4/5}
+  nav.top .wrap{gap:12px}
+  nav.top .btn{padding:7px 12px;font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <a class="logo" href="#top"><i></i>tuti<sup>v25</sup></a>
+  <div class="navlinks"><a href="#producto">Producto</a><a href="#changelog">Changelog</a><a href="#compatibilidad">Compatibilidad</a><a href="#faq">FAQ</a></div>
+  <a class="btn" href="#rsvp">Confirmar</a>
+</div></nav>
+
+<header class="wrap hero" id="top">
+  <a class="pill" href="#rsvp"><b>NUEVO</b>Lanzamiento: domingo 1/11, 12:00 →</a>
+  <h1>Tuti 25<span>.</span></h1>
+  <p class="sub">Un año más de experiencia. Mismo hardware.</p>
+  <div class="ctas">
+    <a class="btn lg" href="#rsvp">Confirmar asistencia</a>
+    <a class="btn lg ghost" href="#changelog">Ver release notes</a>
+  </div>
+  <p class="meta">Evento de lanzamiento · Domingo 1 de noviembre · 12:00 · Hamburguesas</p>
+  <div class="shot"><img src="img/p7.jpg" alt="Tuti de smoking y moño"><span class="tag">tuti-25-hero.jpg</span></div>
+</header>
+
+<div class="trust"><div class="wrap">
+  <p>Con la confianza de</p>
+  <span>Luna</span><span>la familia</span><span>BM Import</span><span>Lexo</span><span>los amigos</span>
+</div></div>
+
+<section class="s" id="producto"><div class="wrap">
+  <div class="s-head"><span class="kicker">Producto</span><h2>Quién es Tuti</h2><p>Especificaciones técnicas de la versión 25.</p></div>
+  <dl class="specs">
+    <div><dt>Modelo</dt><dd>Tuti</dd></div>
+    <div><dt>Versión</dt><dd>25.0 (estable)</dd></div>
+    <div><dt>Origen</dt><dd>Argentina</dd></div>
+    <div><dt>Rol</dt><dd>Departamento de IT<small>Unidades en el departamento: 1</small></dd></div>
+    <div><dt>Idiomas</dt><dd>Español rioplatense, Python, Excel</dd></div>
+    <div><dt>Interfaz principal</dt><dd>Audios de WhatsApp</dd></div>
+    <div><dt>Escuderías</dt><dd>Red Bull, Ferrari</dd></div>
+    <div><dt>Accesorios incluidos</dt><dd>Luna</dd></div>
+  </dl>
+  <div class="features">
+    <div class="feat"><div class="img"><img src="img/p1.jpg" alt="Tuti dormido sobre sillas de jardín" loading="lazy"></div><div class="txt"><h3>Modo de bajo consumo</h3><p>Se activa en cualquier superficie.</p></div></div>
+    <div class="feat"><div class="img"><img src="img/p3.jpg" alt="Tuti en el sillón con Luna" loading="lazy"></div><div class="txt"><h3>Integración nativa con Luna</h3><p>Emparejamiento automático.</p></div></div>
+    <div class="feat"><div class="img"><img src="img/p5.jpg" alt="Tuti grabando un audio" loading="lazy"></div><div class="txt"><h3>Interfaz de voz</h3><p>Sin límite de duración.</p></div></div>
+    <div class="feat"><div class="img"><img src="img/p13.jpg" alt="Tuti en un recital" loading="lazy"></div><div class="txt"><h3>Rendimiento en eventos</h3><p>Probado en condiciones reales.</p></div></div>
+  </div>
+</div></section>
+
+<section class="s" id="prensa"><div class="wrap">
+  <div class="s-head"><span class="kicker">Kit de prensa</span><h2>Imágenes oficiales</h2><p>Para uso editorial.</p></div>
+  <div class="press">
+    <figure class="wide"><div class="frame"><img src="img/p8.jpg" alt="Tuti festejando en una pista de bowling" loading="lazy"></div><figcaption><span>press-01.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p12.jpg" alt="Tuti con un cachorro" loading="lazy"></div><figcaption><span>press-02.jpg</span><span>JPG</span></figcaption></figure>
+    <figure class="wide"><div class="frame"><img src="img/p10.jpg" alt="Tuti y un amigo de smoking, espalda con espalda" loading="lazy"></div><figcaption><span>press-03.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p11.jpg" alt="Tuti sacando la lengua" loading="lazy"></div><figcaption><span>press-04.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p9.jpg" alt="Tuti mirando el mar" loading="lazy"></div><figcaption><span>press-05.jpg</span><span>JPG</span></figcaption></figure>
+    <figure class="wide"><div class="frame"><img src="img/p6.jpg" alt="Tuti y dos amigos en la playa" loading="lazy"></div><figcaption><span>press-06.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p15.jpg" alt="Tuti pensativo con la mano en el mentón" loading="lazy"></div><figcaption><span>press-07.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p14.jpg" alt="Tuti posando con una escopeta" loading="lazy"></div><figcaption><span>press-08.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p2.jpg" alt="Tuti de saco frente a un lago" loading="lazy"></div><figcaption><span>press-09.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p0.jpg" alt="Tuti en un bar con Luna" loading="lazy"></div><figcaption><span>press-10.jpg</span><span>JPG</span></figcaption></figure>
+    <figure><div class="frame"><img src="img/p4.jpg" alt="Luna sentada en una silla" loading="lazy"></div><figcaption><span>press-11.jpg</span><span>JPG</span></figcaption></figure>
+  </div>
+</div></section>
+
+<section class="s" id="changelog"><div class="wrap">
+  <div class="s-head"><span class="kicker">Changelog</span><h2>Por qué cumple 25</h2><p>Después de 24 versiones, esta es la estable.</p></div>
+  <div class="changelog">
+    <div class="rel"><h3>v25.0</h3><p>Release anual</p><span class="latest">LATEST</span></div>
+    <div>
+      <div class="log">
+        <div class="c-new"><h4>Nuevo</h4><ul><li>Primer cuarto de siglo completado.</li><li>Se puede alquilar un auto sin recargo por edad.</li></ul></div>
+        <div class="c-imp"><h4>Mejoras</h4><ul><li>Criterio general: +4%.</li><li>Tiempo de recuperación después de una salida: ahora 2 días.</li></ul></div>
+        <div class="c-fix"><h4>Correcciones</h4><ul><li>La edad ya no termina en 4.</li></ul></div>
+        <div class="c-dep"><h4>Obsoleto</h4><ul><li>Descuentos de estudiante.</li><li>"Soy chico todavía" como argumento.</li></ul></div>
+        <div class="c-bug"><h4>Problemas conocidos</h4><ul><li>El pelo no responde en días de humedad.</li><li>El modo de bajo consumo puede activarse sin aviso.</li></ul></div>
+      </div>
+      <div class="older"><div><b>v24.0</b><span>Mantenimiento general</span></div><div><b>v18.0</b><span>Habilitado para votar y manejar</span></div><div><b>v1.0</b><span>Lanzamiento inicial</span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="s" id="compatibilidad"><div class="wrap">
+  <div class="s-head"><span class="kicker">Compatibilidad</span><h2>Quiénes están invitados</h2><p>Requisitos para asistir al lanzamiento.</p></div>
+  <div class="compat">
+    <div class="tbl"><table>
+      <thead><tr><th>Dispositivo</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td>Amigos (todas las versiones)</td><td><span class="st ok">Compatible</span></td></tr>
+        <tr><td>Familia</td><td><span class="st ok">Compatible</span></td></tr>
+        <tr><td>Compañeros de trabajo</td><td><span class="st ok">Compatible</span></td></tr>
+        <tr><td>Luna</td><td><span class="st ok">Soporte nativo</span></td></tr>
+        <tr><td>Tu +1</td><td><span class="st warn">Indicalo en el formulario</span></td></tr>
+        <tr><td>Hinchas de Mercedes</td><td><span class="st no">En revisión</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div></section>
+
+<section class="s" id="rsvp"><div class="wrap">
+  <div class="rsvp">
+    <div>
+      <div class="s-head"><span class="kicker">Acceso anticipado</span><h2>Confirmar asistencia</h2><p>Completalo una vez. Lo podés cambiar después.</p></div>
+      <div class="steps">
+        <div><i>01</i><span><b>Completá el formulario.</b> Un minuto.</span></div>
+        <div><i>02</i><span><b>Recibí la dirección</b> por WhatsApp.</span></div>
+        <div><i>03</i><span><b>Vení el domingo 1 de noviembre a las 12.</b></span></div>
+      </div>
+    </div>
+    <div class="card">
+      <form id="form" name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="rsvp">
+        <p hidden><label>No completar: <input name="bot-field"></label></p>
+        <input type="hidden" name="restricciones" id="restricciones">
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido" maxlength="80">
+        </div>
+        <fieldset>
+          <span class="lbl">¿Venís?</span>
+          <div class="seg">
+            <input type="radio" id="viene-si" name="viene" value="si" checked><label for="viene-si">Sí</label>
+            <input type="radio" id="viene-quizas" name="viene" value="quizas"><label for="viene-quizas">Quizás</label>
+            <input type="radio" id="viene-no" name="viene" value="no"><label for="viene-no">No puedo</label>
+          </div>
+        </fieldset>
+        <fieldset id="plus-set">
+          <span class="lbl">Acompañante</span>
+          <div class="seg">
+            <input type="radio" id="plus-no" name="plus" value="no" checked><label for="plus-no">Voy solo/a</label>
+            <input type="radio" id="plus-si" name="plus" value="si"><label for="plus-si">Llevo +1</label>
+          </div>
+          <div class="field" id="plus-wrap" hidden>
+            <label for="plusnombre">Nombre del +1</label>
+            <input type="text" id="plusnombre" name="acompanante" placeholder="Nombre y apellido" maxlength="80">
+          </div>
+        </fieldset>
+        <fieldset id="diet-set">
+          <span class="lbl">Restricciones alimenticias</span>
+          <span class="hint">Tuyas o de tu +1. Hay hamburguesas; si necesitás otra opción, marcalo.</span>
+          <div class="chks">
+            <span class="chk"><input type="checkbox" id="d-ninguna" value="Ninguna"><label for="d-ninguna">Ninguna</label></span>
+            <span class="chk"><input type="checkbox" id="d-veggie" value="Vegetariano/a"><label for="d-veggie">Vegetariano/a</label></span>
+            <span class="chk"><input type="checkbox" id="d-vegan" value="Vegano/a"><label for="d-vegan">Vegano/a</label></span>
+            <span class="chk"><input type="checkbox" id="d-tacc" value="Sin TACC"><label for="d-tacc">Sin TACC</label></span>
+            <span class="chk"><input type="checkbox" id="d-lact" value="Sin lactosa"><label for="d-lact">Sin lactosa</label></span>
+            <span class="chk"><input type="checkbox" id="d-kosher" value="Kosher"><label for="d-kosher">Kosher</label></span>
+            <span class="chk"><input type="checkbox" id="d-otra" value="Otra"><label for="d-otra">Otra</label></span>
+          </div>
+          <div class="field" id="otra-wrap" hidden>
+            <label for="otra">¿Cuál?</label>
+            <input type="text" id="otra" placeholder="Alergias, cosas que no comés…" maxlength="160">
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="mensaje">Mensaje <span class="hint">(opcional)</span></label>
+          <textarea id="mensaje" name="mensaje" maxlength="400"></textarea>
+        </div>
+        <div class="submit">
+          <button class="btn lg" type="submit" id="send">Confirmar asistencia</button>
+          <span class="msg" id="status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+      <div class="done" id="done" hidden>
+        <div class="check" aria-hidden="true">✓</div>
+        <h3 id="done-title">Asistencia confirmada</h3>
+        <p id="done-text">Te esperamos el domingo 1/11 a las 12. La dirección te llega por WhatsApp.</p>
+        <pre id="done-summary"></pre>
+        <div class="row">
+          <button class="btn" type="button" id="copy" hidden>Copiar respuesta</button>
+          <button class="btn ghost" type="button" id="edit">Editar respuesta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="s" id="faq"><div class="wrap">
+  <div class="s-head"><span class="kicker">FAQ</span><h2>Preguntas frecuentes</h2></div>
+  <div class="faq">
+    <div><h3>¿Cuándo?</h3><p>Domingo 1 de noviembre, 12:00.</p></div>
+    <div><h3>¿Dónde?</h3><p>La dirección te llega por WhatsApp cuando confirmes.</p></div>
+    <div><h3>¿Qué se come?</h3><p>Hamburguesas. Si tenés alguna restricción, marcala en el formulario.</p></div>
+    <div><h3>¿Cuánto cuesta?</h3><p>Gratis. Si traés algo para tomar, mejor.</p></div>
+    <div><h3>¿Hay que llevar regalo?</h3><p>No es obligatorio. Tampoco está prohibido.</p></div>
+    <div><h3>¿Puedo llevar a alguien?</h3><p>Sí. Indicá un +1 en el formulario.</p></div>
+    <div><h3>¿Va a estar Luna?</h3><p>Sí.</p></div>
+    <div><h3>¿Hay dress code?</h3><p>No.</p></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>© 2026 Tuti. Todos los derechos reservados.</span>
+  <span class="mono">v25.0 · build estable</span>
+</div></footer>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const form = $('#form'), statusEl = $('#status');
+  const VIENE = {si:'Sí', quizas:'Quizás', no:'No'};
+  function syncForm(){
+    const no = form.viene.value === 'no';
+    $('#plus-set').hidden = no; $('#diet-set').hidden = no;
+    $('#plus-wrap').hidden = form.plus.value !== 'si';
+    $('#otra-wrap').hidden = !$('#d-otra').checked;
+  }
+  form.addEventListener('change', e => {
+    const t = e.target;
+    if (t.id === 'd-ninguna' && t.checked) document.querySelectorAll('.chk input').forEach(c => { if (c !== t) c.checked = false; });
+    else if (t.closest('.chk') && t.checked) $('#d-ninguna').checked = false;
+    syncForm();
+  });
+  function collect(){
+    const going = form.viene.value !== 'no';
+    const plus = going && form.plus.value === 'si';
+    const dietas = going ? [...document.querySelectorAll('.chk input:checked')].map(c => c.value === 'Otra' ? 'Otra: ' + ($('#otra').value.trim() || 'sin especificar') : c.value) : [];
+    return { nombre: $('#nombre').value.trim(), viene: form.viene.value, plusUno: plus, plusNombre: plus ? $('#plusnombre').value.trim() : '', dietas, mensaje: $('#mensaje').value.trim() };
+  }
+  function summary(r){
+    let s = `Tuti cumple 25 · confirmación\nNombre: ${r.nombre}\n¿Viene?: ${VIENE[r.viene]}`;
+    if (r.viene !== 'no') s += `\n+1: ${r.plusUno ? (r.plusNombre || 'Sí') : 'No'}\nRestricciones: ${r.dietas.length ? r.dietas.join(', ') : 'Ninguna indicada'}`;
+    if (r.mensaje) s += `\nMensaje: ${r.mensaje}`;
+    return s;
+  }
+  function showDone(r, saved){
+    form.hidden = true; $('#done').hidden = false;
+    $('#done-summary').textContent = summary(r);
+    if (saved) {
+      $('#done-title').textContent = r.viene === 'no' ? 'Respuesta registrada' : (r.viene === 'quizas' ? 'Registrado como "quizás"' : 'Asistencia confirmada');
+      $('#done-text').textContent = r.viene === 'no' ? 'Gracias por avisar.' : 'Te esperamos el domingo 1/11 a las 12. La dirección te llega por WhatsApp.';
+      $('#copy').hidden = true;
+    } else {
+      $('#done-title').textContent = 'No se pudo enviar';
+      $('#done-text').textContent = 'Copiá tu respuesta y mandásela a Tuti por WhatsApp.';
+      $('#copy').hidden = false;
+    }
+  }
+  $('#edit').addEventListener('click', () => { $('#done').hidden = true; form.hidden = false; $('#nombre').focus(); });
+  $('#copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('#done-summary').textContent); $('#copy').textContent = 'Copiado'; }
+    catch { const rg = document.createRange(); rg.selectNodeContents($('#done-summary')); const s = getSelection(); s.removeAllRanges(); s.addRange(rg); $('#copy').textContent = 'Texto seleccionado'; }
+  });
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    statusEl.className = 'msg'; statusEl.textContent = '';
+    const r = collect();
+    if (!r.nombre) { statusEl.className = 'msg err'; statusEl.textContent = 'Falta tu nombre.'; $('#nombre').focus(); return; }
+    if (r.plusUno && !r.plusNombre) { statusEl.className = 'msg err'; statusEl.textContent = 'Falta el nombre de tu +1.'; $('#plusnombre').focus(); return; }
+    $('#restricciones').value = r.dietas.join(', ');
+    const body = new URLSearchParams({
+      'form-name': 'rsvp', 'bot-field': form['bot-field'].value,
+      nombre: r.nombre, viene: VIENE[r.viene], plus: r.plusUno ? 'Sí' : 'No',
+      acompanante: r.plusNombre, restricciones: r.dietas.join(', '), mensaje: r.mensaje
+    });
+    $('#send').disabled = true; statusEl.textContent = 'Enviando…';
+    try {
+      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
+      if (!res.ok) throw new Error(res.status);
+      statusEl.textContent = ''; showDone(r, true);
+    } catch { statusEl.textContent = ''; showDone(r, false); }
+    finally { $('#send').disabled = false; }
+  });
+})();
+</script>
+
+</body>
+</html>
