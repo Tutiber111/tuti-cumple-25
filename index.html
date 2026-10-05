@@ -193,6 +193,7 @@ dialog#dc::backdrop{background:rgba(0,0,0,.6)}
 dialog#dc img{width:100%;display:block}
 dialog#dc .dc-body{padding:16px 20px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 dialog#dc .dc-body p{font-weight:600}
+dialog#dc .dc-note{display:block;font-size:14px;color:var(--muted);margin-top:2px}
 @media (max-width:860px){.incl{grid-template-columns:repeat(2,minmax(0,1fr))}.incl .more{grid-column:span 2;min-height:0}}
 .panel{margin-top:48px}
 .panel h3{font-size:18px}
@@ -422,7 +423,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
 <dialog id="dc" aria-label="Dress code">
   <img src="img/p10.jpg" alt="Tuti y un amigo de smoking, espalda con espalda, haciendo pistolas con los dedos" loading="lazy">
-  <div class="dc-body"><p>Dress code: smoking.</p><button class="btn ghost" type="button" id="dc-close">Cerrar</button></div>
+  <div class="dc-body"><div><p>Dress code: smoking.</p><span class="dc-note">No es un requisito serio. Vení como quieras.</span></div><button class="btn ghost" type="button" id="dc-close">Cerrar</button></div>
 </dialog>
 
 <script>
