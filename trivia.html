@@ -44,6 +44,8 @@ h1 span{color:var(--accent)}
 .reveal{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;flex:1;min-height:0}
 .reveal .opts{margin-top:0;grid-template-columns:1fr}
 .reveal .opts .opt{min-height:0;padding:18px 24px}
+.qimg{display:block;max-width:100%;max-height:34vh;object-fit:contain;border-radius:16px;margin:0 auto;border:1px solid var(--line)}
+.qimg.small{max-height:22vh;margin:0 0 20px}
 .note{font-size:26px;font-weight:600;color:var(--accent);margin-top:16px}
 .board{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px}
 .board h3{margin:0 0 12px;font-size:16px;font-family:var(--f-mono);font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
@@ -104,6 +106,7 @@ h1 span{color:var(--accent)}
       <div class="answered"><b id="acount">0</b>respuestas</div>
     </div>
     <div class="qtext" id="qtext"></div>
+    <img class="qimg" id="qimg" alt="" hidden>
     <div class="opts" id="qopts"></div>
     <div class="foot"><button class="btn ghost" id="b-skip">Cortar tiempo</button></div>
   </section>
@@ -113,6 +116,7 @@ h1 span{color:var(--accent)}
     <div class="reveal">
       <div>
         <div class="qtext" id="rtext" style="text-align:left;margin:0 0 20px;font-size:clamp(26px,3vw,40px);max-width:none"></div>
+        <img class="qimg small" id="rimg" alt="" hidden>
         <div class="opts" id="ropts"></div>
         <div class="note" id="rnote"></div>
       </div>
@@ -204,6 +208,8 @@ h1 span{color:var(--accent)}
     $('#meta').innerHTML = host ? `<span class="status-dot ${live ? '' : 'off'}"></span>PIN <b>${esc(host.pin)}</b> · ${players.length} jugadores` : '';
   }
 
+  function setImg(el, src){ if (src) { if (el.getAttribute('src') !== src) el.src = src; el.hidden = false; } else { el.hidden = true; el.removeAttribute('src'); } }
+
   function ranking(){ return [...players].sort((a, b) => b.score - a.score || a.created_at.localeCompare(b.created_at)); }
 
   function render(){
@@ -244,6 +250,7 @@ h1 span{color:var(--accent)}
     if (!question) return;
     $('#qprog').textContent = `Pregunta ${game.q_index + 1} de ${game.q_total}`;
     $('#qtext').textContent = question.text;
+    setImg($('#qimg'), question.image);
     const html = optsHTML(question);
     if ($('#qopts').dataset.k !== String(game.q_index)) { $('#qopts').innerHTML = html; $('#qopts').dataset.k = game.q_index; }
     $('#acount').textContent = game.answer_count;
@@ -254,6 +261,7 @@ h1 span{color:var(--accent)}
     if (!question) return;
     $('#rprog').textContent = `Pregunta ${game.q_index + 1} de ${game.q_total}`;
     $('#rtext').textContent = question.text;
+    setImg($('#rimg'), question.image);
     $('#rnote').textContent = question.note || '';
     $('#b-next').textContent = game.q_index + 1 >= game.q_total ? 'Ver podio' : 'Siguiente pregunta';
     const top = ranking().slice(0, 5);

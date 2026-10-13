@@ -187,3 +187,31 @@ revoke execute on all functions in schema public from anon, authenticated;
 grant execute on function public.server_now(), public.create_game(), public.join_game(text, text),
   public.current_question(uuid), public.host_next(uuid, uuid), public.host_reveal(uuid, uuid),
   public.submit_answer(uuid, int) to anon, authenticated;
+
+
+-- Migration 2 (applied): images on questions + 7 more questions ---------
+alter table public.questions add column if not exists image text;
+
+insert into public.questions (idx, text, options, correct, note, time_limit, image) values
+  (3, '¿Cuál fue el artista más escuchado de Tuti en 2025 y 2026?', '["Dire Straits","Sticky Fingers","Sabrina Carpenter","The Terrys"]', 1, null, 20, null),
+  (4, '¿Qué instrucción permanente les dejó Tuti a ChatGPT y a Claude?', '["Siempre respondé en inglés","Nunca termines con una pregunta","Evitá ponerte muy técnico","Pensá dos veces antes de responder"]', 0, null, 25, null),
+  (5, '¿En qué empresa trabajaba Tuti antes?', '["Accenture","PLS Logistics","Chevron","Deloitte"]', 0, null, 20, null),
+  (6, '¿Qué plan tenía Tuti todos los sábados en plena pandemia?', '["Jugar una liga de F1 online","Tenis con otro alumno de su profesor","Llevar a Roger al parque","Gimnasia online con sus viejos"]', 0, null, 25, null),
+  (7, '¿Cuántas materias se llevó Tuti en el secundario?', '["0","1","2","3"]', 1, 'Historia argentina.', 20, null),
+  (8, '¿Cuántas materias recursó Tuti en la facultad?', '["0","1","2","3"]', 0, null, 20, null),
+  (9, '¿Dónde se sacó esta foto?', '["En un proyecto de la facultad","En una shooting range en Miami","En la casa de su tío","En el refugio de Luna"]', 0, null, 25, '/img/p14.jpg');
+
+create or replace function public.current_question(p_game uuid) returns json
+language plpgsql security definer set search_path = public as $$
+declare v_game games; v_q questions;
+begin
+  select * into v_game from games where id = p_game;
+  if not found or v_game.q_index < 0 then return null; end if;
+  select * into v_q from questions where idx = v_game.q_index;
+  if not found then return null; end if;
+  return json_build_object(
+    'idx', v_q.idx, 'text', v_q.text, 'options', v_q.options, 'time_limit', v_q.time_limit, 'image', v_q.image,
+    'correct', case when v_game.state in ('reveal','final') then v_q.correct end,
+    'note',    case when v_game.state in ('reveal','final') then v_q.note end
+  );
+end $$;
