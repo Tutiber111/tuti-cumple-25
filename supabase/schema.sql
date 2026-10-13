@@ -82,7 +82,7 @@ alter publication supabase_realtime add table public.games, public.players, publ
 
 -- Functions -------------------------------------------------------------
 create or replace function public.server_now() returns timestamptz
-language sql stable as $$ select now() $$;
+language sql stable set search_path = '' as $$ select now() $$;
 
 create or replace function public.create_game() returns json
 language plpgsql security definer set search_path = public as $$
@@ -183,6 +183,7 @@ begin
 end $$;
 
 revoke execute on all functions in schema public from public;
+revoke execute on all functions in schema public from anon, authenticated;
 grant execute on function public.server_now(), public.create_game(), public.join_game(text, text),
   public.current_question(uuid), public.host_next(uuid, uuid), public.host_reveal(uuid, uuid),
   public.submit_answer(uuid, int) to anon, authenticated;
