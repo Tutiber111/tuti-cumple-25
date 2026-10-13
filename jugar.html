@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F0F0E">
+<title>Tuti Trivia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/trivia-assets/trivia.css">
+<style>
+body{display:flex;flex-direction:column;min-height:100%;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+header .me{font-family:var(--f-mono);font-size:13px;color:var(--muted);text-align:right}
+header .me b{color:var(--fg);font-weight:500}
+main{flex:1;display:flex;flex-direction:column;padding:20px 16px;max-width:560px;width:100%;margin:0 auto}
+.screen{flex:1;display:flex;flex-direction:column;gap:16px}
+.center{justify-content:center;align-items:center;text-align:center}
+h1{font-size:40px;letter-spacing:-.04em;margin:0;line-height:1.05}
+h1 span{color:var(--accent)}
+.sub{color:var(--muted);font-size:17px;margin:0}
+label{font-size:14px;font-weight:600;display:grid;gap:6px;text-align:left}
+input{font:inherit;font-size:20px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;width:100%}
+input:focus{outline:none;border-color:var(--fg)}
+#pin-in{font-family:var(--f-mono);letter-spacing:.2em;text-align:center;font-size:28px}
+form{display:grid;gap:16px;width:100%}
+form .btn{width:100%;font-size:18px;padding:16px}
+.qmeta{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.qmeta .t{font-size:22px;color:var(--fg)}
+.qtext{font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.grid{flex:1;display:grid;gap:12px;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;min-height:320px}
+.grid.two{grid-template-columns:1fr}
+.grid .opt{font-size:20px;padding:16px;flex-direction:column;justify-content:center;text-align:center;gap:8px}
+.grid .opt .sh{font-size:32px;width:auto}
+.grid .opt:active{transform:scale(.97)}
+.big{font-size:64px;line-height:1}
+.result{border-radius:20px;padding:28px 20px;width:100%;display:grid;gap:8px}
+.result.ok{background:color-mix(in srgb,var(--ok) 22%,var(--surface));border:1px solid var(--ok)}
+.result.bad{background:color-mix(in srgb,var(--bad) 22%,var(--surface));border:1px solid var(--bad)}
+.result.none{background:var(--surface);border:1px solid var(--line)}
+.result h2{margin:0;font-size:30px;letter-spacing:-.03em}
+.pts{font-family:var(--f-mono);font-size:22px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stats b{display:block;font-size:30px;font-variant-numeric:tabular-nums}
+.stats span{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.spinner{width:36px;height:36px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:14px;padding:8px}
+.conn{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--bad);color:#fff;font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px}
+</style>
+</head>
+<body>
+<header>
+  <span class="logo"><i></i>tuti<sup>v25</sup></span>
+  <span class="me" id="me"></span>
+</header>
+<main>
+  <section class="screen center" id="v-join">
+    <span class="kicker">Trivia de Tuti</span>
+    <h1>Entrá a la partida<span>.</span></h1>
+    <p class="sub">El PIN está en la pantalla grande.</p>
+    <form id="f-join" novalidate>
+      <label>PIN<input id="pin-in" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="000000"></label>
+      <label>Tu nombre<input id="name-in" autocomplete="nickname" maxlength="24" placeholder="Como te conoce Tuti"></label>
+      <button class="btn" id="b-join" type="submit">Entrar</button>
+      <p class="msg" id="join-msg"></p>
+    </form>
+  </section>
+
+  <section class="screen center" id="v-wait" hidden>
+    <div class="spinner"></div>
+    <h1 id="wait-title">Estás adentro<span>.</span></h1>
+    <p class="sub" id="wait-sub">Mirá la pantalla grande. Arranca en un momento.</p>
+  </section>
+
+  <section class="screen" id="v-q" hidden>
+    <div class="qmeta"><span id="qprog"></span><span class="t" id="qtimer"></span></div>
+    <div class="qtext" id="qtext"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="screen center" id="v-result" hidden>
+    <div class="result" id="result"><h2 id="res-title"></h2><span class="pts" id="res-pts"></span><span class="sub" id="res-note"></span></div>
+    <div class="stats"><div><b id="st-score">0</b><span>Puntos</span></div><div><b id="st-rank">–</b><span>Puesto</span></div></div>
+    <p class="sub">Esperá la próxima pregunta.</p>
+  </section>
+
+  <section class="screen center" id="v-final" hidden>
+    <span class="kicker">Fin de la partida</span>
+    <div class="big" id="fin-rank"></div>
+    <h1 id="fin-title"></h1>
+    <p class="sub" id="fin-sub"></p>
+    <button class="link" id="b-leave" type="button">Jugar otra partida</button>
+  </section>
+</main>
+<div class="conn" id="conn" hidden>Reconectando…</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/trivia-assets/config.js"></script>
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const SHAPES = ['▲','◆','●','■'];
+  const KEY = 'tuti-trivia-player';
+  const sb = supabase.createClient(TRIVIA_CONFIG.url, TRIVIA_CONFIG.key);
+
+  let me = null;          // {player_id, game_id, name}
+  let game = null, question = null, qLoadedFor = null;
+  let myScore = 0, myRank = null;
+  let answered = {};      // q_index -> choice (local memory, survives reloads)
+  let offset = 0, channel = null;
+
+  const now = () => Date.now() + offset;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const show = id => ['join','wait','q','result','final'].forEach(v => $('#v-' + v).hidden = v !== id);
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ me, answered })); } catch {} };
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } };
+
+  async function syncClock(){
+    try { const t0 = Date.now(); const { data } = await sb.rpc('server_now'); const t1 = Date.now();
+      offset = new Date(data).getTime() - (t0 + t1) / 2; } catch {}
+  }
+
+  async function fetchState(){
+    const [g, p] = await Promise.all([
+      sb.from('games').select('*').eq('id', me.game_id).maybeSingle(),
+      sb.from('players').select('id,score,created_at').eq('game_id', me.game_id)
+    ]);
+    if (g.error || p.error) { $('#conn').hidden = false; return false; }
+    $('#conn').hidden = true;
+    game = g.data;
+    if (!game || !p.data.some(x => x.id === me.player_id)) { leave(); return false; }
+    const list = p.data.sort((a, b) => b.score - a.score || a.created_at.localeCompare(b.created_at));
+    const mine = list.find(x => x.id === me.player_id);
+    myScore = mine.score; myRank = list.indexOf(mine) + 1;
+    return true;
+  }
+  async function ensureQuestion(){
+    if (!game || game.q_index < 0) return;
+    const key = (game.state === 'question' ? 'q' : 'r') + ':' + game.q_index;
+    if (qLoadedFor === key) return;
+    const { data } = await sb.rpc('current_question', { p_game: game.id });
+    question = data; qLoadedFor = key;
+  }
+
+  let busy = false, again = false;
+  async function refresh(){
+    if (!me) return;
+    if (busy) { again = true; return; }
+    busy = true;
+    try { if (await fetchState()) { await ensureQuestion(); await render(); } }
+    finally { busy = false; if (again) { again = false; refresh(); } }
+  }
+
+  function subscribe(){
+    if (channel) sb.removeChannel(channel);
+    channel = sb.channel('player-' + me.player_id)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'games', filter: 'id=eq.' + me.game_id }, () => refresh())
+      .subscribe(st => { if (st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') setTimeout(subscribe, 2000); });
+  }
+
+  function renderMe(){ $('#me').innerHTML = me ? `<b>${esc(me.name)}</b><br>${myScore} pts` : ''; }
+
+  async function render(){
+    renderMe();
+    if (!me) { show('join'); return; }
+    if (!game) return;
+    if (game.state === 'lobby') {
+      $('#wait-title').innerHTML = 'Estás adentro<span>.</span>';
+      $('#wait-sub').textContent = 'Mirá la pantalla grande. Arranca en un momento.';
+      show('wait'); return;
+    }
+    if (game.state === 'question') {
+      if (answered[game.q_index] != null) {
+        $('#wait-title').innerHTML = 'Respuesta enviada<span>.</span>';
+        $('#wait-sub').textContent = 'Esperá a que terminen los demás.';
+        show('wait'); return;
+      }
+      renderQuestion(); return;
+    }
+    if (game.state === 'reveal') { await renderResult(); return; }
+    renderFinal();
+  }
+
+  function renderQuestion(){
+    if (!question) return;
+    show('q');
+    $('#qprog').textContent = `Pregunta ${game.q_index + 1} de ${game.q_total}`;
+    $('#qtext').textContent = question.text;
+    const grid = $('#grid');
+    if (grid.dataset.k !== String(game.q_index)) {
+      grid.dataset.k = game.q_index;
+      grid.classList.toggle('two', question.options.length === 2);
+      grid.innerHTML = question.options.map((o, i) => `<button class="opt c${i}" type="button" data-i="${i}"><span class="sh">${SHAPES[i]}</span><span>${esc(o)}</span></button>`).join('');
+    }
+  }
+
+  $('#grid').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-i]'); if (!b || !game) return;
+    const q = game.q_index, choice = +b.dataset.i;
+    if (answered[q] != null) return;
+    answered[q] = choice; save();
+    $('#wait-title').innerHTML = 'Respuesta enviada<span>.</span>';
+    $('#wait-sub').textContent = 'Esperá a que terminen los demás.';
+    show('wait');
+    const { data, error } = await sb.rpc('submit_answer', { p_player: me.player_id, p_choice: choice });
+    if (error) { delete answered[q]; save(); $('#conn').hidden = false; refresh(); return; }
+    if (data && (data.status === 'late' || data.status === 'closed')) {
+      $('#wait-title').innerHTML = 'Se terminó el tiempo<span>.</span>';
+      $('#wait-sub').textContent = 'Tu respuesta llegó tarde.';
+    }
+  });
+
+  async function renderResult(){
+    show('result');
+    $('#st-score').textContent = myScore; $('#st-rank').textContent = myRank ? '#' + myRank : '–';
+    const k = 'res' + game.q_index;
+    const box = $('#result');
+    if (box.dataset.k === k) return;
+    const { data } = await sb.from('answers').select('is_correct,points').eq('player_id', me.player_id).eq('q_index', game.q_index).maybeSingle();
+    box.dataset.k = k;
+    const note = question && question.note ? question.note : '';
+    if (!data) { box.className = 'result none'; $('#res-title').textContent = 'Sin respuesta'; $('#res-pts').textContent = '+0'; }
+    else if (data.is_correct) { box.className = 'result ok'; $('#res-title').textContent = 'Correcto'; $('#res-pts').textContent = '+' + data.points; }
+    else { box.className = 'result bad'; $('#res-title').textContent = 'Incorrecto'; $('#res-pts').textContent = '+0'; }
+    const right = question && question.correct != null ? 'Era: ' + question.options[question.correct] + '. ' : '';
+    $('#res-note').textContent = (data && data.is_correct ? '' : right) + note;
+  }
+
+  function renderFinal(){
+    show('final');
+    $('#fin-rank').textContent = myRank ? '#' + myRank : '';
+    $('#fin-title').textContent = myRank === 1 ? 'Ganaste.' : myRank && myRank <= 3 ? 'Podio.' : 'Buen intento.';
+    $('#fin-sub').textContent = `${myScore} puntos. Mirá el podio en la pantalla grande.`;
+  }
+
+  // Countdown on the phone
+  setInterval(() => {
+    if (!game || game.state !== 'question' || !game.q_started_at) return;
+    const end = new Date(game.q_started_at).getTime() + game.q_time_limit * 1000;
+    $('#qtimer').textContent = Math.max(0, Math.ceil((end - now()) / 1000));
+  }, 250);
+
+  function leave(){
+    me = null; game = null; question = null; qLoadedFor = null; answered = {};
+    try { localStorage.removeItem(KEY); } catch {}
+    if (channel) { sb.removeChannel(channel); channel = null; }
+    renderMe(); show('join');
+  }
+  $('#b-leave').addEventListener('click', leave);
+
+  $('#f-join').addEventListener('submit', async e => {
+    e.preventDefault();
+    const pin = $('#pin-in').value.replace(/\D/g, ''), name = $('#name-in').value.trim();
+    const msg = $('#join-msg'); msg.textContent = '';
+    if (pin.length !== 6) { msg.textContent = 'El PIN tiene 6 números.'; return; }
+    if (!name) { msg.textContent = 'Poné tu nombre.'; return; }
+    $('#b-join').disabled = true;
+    const { data, error } = await sb.rpc('join_game', { p_pin: pin, p_name: name });
+    $('#b-join').disabled = false;
+    if (error) {
+      msg.textContent = /game_not_found/.test(error.message) ? 'No hay ninguna partida con ese PIN.'
+        : /game_over/.test(error.message) ? 'Esa partida ya terminó.' : 'No se pudo entrar. Revisá la conexión.';
+      return;
+    }
+    me = data; answered = {}; save(); subscribe(); refresh();
+  });
+
+  // Safety nets: poll every 2.5 s while visible, and resync when the phone wakes up.
+  setInterval(() => { if (me && !document.hidden) refresh(); }, 2500);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && me) { syncClock(); subscribe(); refresh(); } });
+
+  (async function init(){
+    const p = new URLSearchParams(location.search).get('pin');
+    if (p) $('#pin-in').value = p.replace(/\D/g, '').slice(0, 6);
+    await syncClock();
+    const saved = load();
+    if (saved && saved.me) { me = saved.me; answered = saved.answered || {}; subscribe(); refresh(); return; }
+    show('join');
+    if (p) $('#name-in').focus();
+  })();
+})();
+</script>
+</body>
+</html>

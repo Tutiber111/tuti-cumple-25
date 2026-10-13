@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tuti Trivia · Pantalla</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/trivia-assets/trivia.css">
+<style>
+body{display:flex;flex-direction:column;min-height:100%}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid var(--line)}
+header .meta{font-family:var(--f-mono);font-size:14px;color:var(--muted)}
+header .meta b{color:var(--fg);font-weight:500;letter-spacing:.08em}
+main{flex:1;display:flex;flex-direction:column;padding:28px;gap:24px;max-width:1400px;width:100%;margin:0 auto}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px}
+h1{font-size:clamp(48px,7vw,96px);letter-spacing:-.05em;margin:0;line-height:1}
+h1 span{color:var(--accent)}
+/* lobby */
+.lobby{flex:1;display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center}
+.join{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:32px;display:grid;gap:18px;justify-items:center;text-align:center}
+.join .url{font-size:22px;font-weight:600}
+.join .pin{font-family:var(--f-mono);font-size:clamp(56px,7vw,88px);font-weight:500;letter-spacing:.12em;line-height:1}
+#qr{background:#fff;padding:12px;border-radius:12px}
+#qr img,#qr canvas{display:block}
+.who h2{font-size:36px;letter-spacing:-.03em;margin:0 0 6px}
+.who .count{color:var(--muted);margin-bottom:22px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips span{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:20px;font-weight:500;animation:pop .25s ease-out}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+/* question */
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:24px}
+.qtext{font-size:clamp(32px,4.5vw,60px);font-weight:600;letter-spacing:-.03em;line-height:1.1;text-align:center;margin:12px auto 0;max-width:24ch}
+.timer{font-family:var(--f-mono);font-size:56px;font-weight:500;width:120px;height:120px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:3px solid var(--accent);flex:none}
+.timer.low{border-color:var(--bad);color:var(--bad)}
+.answered{text-align:center;font-family:var(--f-mono);color:var(--muted);font-size:18px}
+.answered b{font-size:44px;color:var(--fg);display:block;font-weight:500}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:auto}
+.opts .opt{font-size:clamp(22px,2.6vw,34px);padding:26px 28px;min-height:110px;position:relative}
+.opts .opt .n{margin-left:auto;font-family:var(--f-mono);font-size:.8em;background:rgba(0,0,0,.25);border-radius:999px;padding:2px 14px}
+/* reveal */
+.reveal{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;flex:1;min-height:0}
+.reveal .opts{margin-top:0;grid-template-columns:1fr}
+.reveal .opts .opt{min-height:0;padding:18px 24px}
+.note{font-size:26px;font-weight:600;color:var(--accent);margin-top:16px}
+.board{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px}
+.board h3{margin:0 0 12px;font-size:16px;font-family:var(--f-mono);font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.row{display:grid;grid-template-columns:40px 1fr auto;gap:10px;padding:12px 4px;border-bottom:1px solid var(--line);font-size:22px;align-items:center}
+.row:last-child{border-bottom:0}
+.row .r{font-family:var(--f-mono);color:var(--muted)}
+.row .s{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.foot{display:flex;justify-content:flex-end;gap:12px}
+/* final */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:18px;margin-top:20px}
+.pd{width:min(240px,28vw);display:flex;flex-direction:column;align-items:center;gap:10px}
+.pd .nm{font-size:26px;font-weight:700;text-align:center}
+.pd .sc{font-family:var(--f-mono);color:var(--muted)}
+.pd .bar{width:100%;border-radius:14px 14px 0 0;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:start center;padding-top:14px;font-family:var(--f-mono);font-size:40px}
+.pd.p1 .bar{height:260px;background:var(--accent);color:#140A04;border-color:var(--accent)}
+.pd.p2 .bar{height:190px}
+.pd.p3 .bar{height:140px}
+.rest{max-width:560px;width:100%;margin:28px auto 0}
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px}
+.status-dot.off{background:var(--bad)}
+@media (max-width:900px){.lobby,.reveal{grid-template-columns:1fr}.opts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <span class="logo"><i></i>tuti<sup>v25</sup>&nbsp;<span class="kicker">Trivia en vivo</span></span>
+  <span class="meta" id="meta"></span>
+</header>
+<main>
+  <section class="center" id="v-start">
+    <span class="kicker">Tuti 25 · Evento de lanzamiento</span>
+    <h1>Trivia de Tuti<span>.</span></h1>
+    <p style="color:var(--muted);font-size:20px;margin:0">Abrí esta pantalla en la tele. Los invitados juegan desde el celular.</p>
+    <button class="btn" id="b-create">Crear partida</button>
+    <p class="msg" id="start-msg"></p>
+  </section>
+
+  <section class="lobby" id="v-lobby" hidden>
+    <div class="join">
+      <span class="kicker">Entrá desde el celular</span>
+      <div id="qr"></div>
+      <div class="url" id="join-url"></div>
+      <span class="kicker">PIN</span>
+      <div class="pin" id="pin"></div>
+    </div>
+    <div class="who">
+      <h2>Jugadores</h2>
+      <p class="count" id="pcount">Esperando jugadores…</p>
+      <div class="chips" id="chips"></div>
+      <div style="margin-top:32px"><button class="btn" id="b-start" disabled>Empezar</button></div>
+    </div>
+  </section>
+
+  <section id="v-question" hidden style="flex:1;display:flex;flex-direction:column;gap:24px">
+    <div class="qtop">
+      <div class="timer" id="timer">20</div>
+      <span class="kicker" id="qprog"></span>
+      <div class="answered"><b id="acount">0</b>respuestas</div>
+    </div>
+    <div class="qtext" id="qtext"></div>
+    <div class="opts" id="qopts"></div>
+    <div class="foot"><button class="btn ghost" id="b-skip">Cortar tiempo</button></div>
+  </section>
+
+  <section id="v-reveal" hidden style="flex:1;display:flex;flex-direction:column;gap:20px">
+    <span class="kicker" id="rprog"></span>
+    <div class="reveal">
+      <div>
+        <div class="qtext" id="rtext" style="text-align:left;margin:0 0 20px;font-size:clamp(26px,3vw,40px);max-width:none"></div>
+        <div class="opts" id="ropts"></div>
+        <div class="note" id="rnote"></div>
+      </div>
+      <div class="board"><h3>Ranking</h3><div id="rboard"></div></div>
+    </div>
+    <div class="foot"><button class="btn" id="b-next">Siguiente</button></div>
+  </section>
+
+  <section id="v-final" hidden style="flex:1">
+    <div class="center" style="justify-content:flex-start;gap:8px">
+      <span class="kicker">Resultados finales</span>
+      <h1 style="font-size:clamp(40px,5vw,72px)">Podio<span>.</span></h1>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div class="board rest" id="rest-wrap"><div id="rest"></div></div>
+    <div class="foot" style="margin-top:24px"><button class="btn ghost" id="b-new">Nueva partida</button></div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="/trivia-assets/config.js"></script>
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const SHAPES = ['▲','◆','●','■'];
+  const KEY = 'tuti-trivia-host';
+  const sb = supabase.createClient(TRIVIA_CONFIG.url, TRIVIA_CONFIG.key);
+
+  let host = null;        // {game_id, pin, host_secret}
+  let game = null;        // games row
+  let players = [];
+  let question = null;    // current_question result
+  let qLoadedFor = null;  // "state:q_index" the question was loaded for
+  let offset = 0;         // server clock - local clock (ms)
+  let revealing = -1, advancing = false;
+  let channel = null;
+
+  const now = () => Date.now() + offset;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function show(id){ ['start','lobby','question','reveal','final'].forEach(v => $('#v-' + v).hidden = v !== id); }
+
+  async function syncClock(){
+    try { const t0 = Date.now(); const { data } = await sb.rpc('server_now'); const t1 = Date.now();
+      offset = new Date(data).getTime() - (t0 + t1) / 2; } catch {}
+  }
+
+  function saveHost(){ try { localStorage.setItem(KEY, JSON.stringify(host)); } catch {} }
+  function loadHost(){ try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } }
+
+  async function fetchGame(){
+    const { data, error } = await sb.from('games').select('*').eq('id', host.game_id).single();
+    if (!error && data) game = data;
+  }
+  async function fetchPlayers(){
+    const { data } = await sb.from('players').select('id,name,score,created_at').eq('game_id', host.game_id).order('created_at');
+    if (data) players = data;
+  }
+  async function ensureQuestion(){
+    if (!game || game.q_index < 0) { question = null; return; }
+    const key = (game.state === 'question' ? 'q' : 'r') + ':' + game.q_index;
+    if (qLoadedFor === key) return;
+    const { data } = await sb.rpc('current_question', { p_game: game.id });
+    question = data; qLoadedFor = key;
+  }
+
+  function subscribe(){
+    if (channel) sb.removeChannel(channel);
+    const f = 'game_id=eq.' + host.game_id;
+    channel = sb.channel('host-' + host.game_id)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'games', filter: 'id=eq.' + host.game_id }, p => { game = p.new; refresh(false); })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'players', filter: f }, () => refresh(true))
+      .subscribe(st => { $('#meta').dataset.rt = st; renderMeta(); });
+  }
+
+  let refreshing = false, again = false;
+  async function refresh(withFetch = true){
+    if (refreshing) { again = true; return; }
+    refreshing = true;
+    try {
+      if (withFetch) { await Promise.all([fetchGame(), fetchPlayers()]); }
+      await ensureQuestion();
+      render();
+    } finally { refreshing = false; if (again) { again = false; refresh(true); } }
+  }
+
+  function renderMeta(){
+    const live = $('#meta').dataset.rt === 'SUBSCRIBED';
+    $('#meta').innerHTML = host ? `<span class="status-dot ${live ? '' : 'off'}"></span>PIN <b>${esc(host.pin)}</b> · ${players.length} jugadores` : '';
+  }
+
+  function ranking(){ return [...players].sort((a, b) => b.score - a.score || a.created_at.localeCompare(b.created_at)); }
+
+  function render(){
+    renderMeta();
+    if (!host || !game) { show('start'); return; }
+    if (game.state === 'lobby') renderLobby();
+    else if (game.state === 'question') renderQuestion();
+    else if (game.state === 'reveal') renderReveal();
+    else renderFinal();
+  }
+
+  function renderLobby(){
+    show('lobby');
+    const url = location.origin + '/jugar';
+    $('#join-url').textContent = url.replace(/^https?:\/\//, '');
+    $('#pin').textContent = host.pin;
+    const qr = $('#qr');
+    if (qr.dataset.pin !== host.pin) {
+      qr.textContent = ''; qr.dataset.pin = host.pin;
+      try { new QRCode(qr, { text: url + '?pin=' + host.pin, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M }); } catch {}
+    }
+    $('#pcount').textContent = players.length ? `${players.length} ${players.length === 1 ? 'jugador' : 'jugadores'} conectados` : 'Esperando jugadores…';
+    $('#chips').innerHTML = players.map(p => `<span>${esc(p.name)}</span>`).join('');
+    $('#b-start').disabled = players.length === 0;
+  }
+
+  function optsHTML(q, opts = {}){
+    return q.options.map((o, i) => {
+      let cls = 'opt c' + i;
+      if (opts.correct != null) cls += i === opts.correct ? ' right' : ' dim';
+      const n = opts.counts ? `<span class="n">${opts.counts[i] || 0}</span>` : '';
+      return `<div class="${cls}"><span class="sh">${SHAPES[i]}</span><span>${esc(o)}</span>${n}</div>`;
+    }).join('');
+  }
+
+  function renderQuestion(){
+    show('question');
+    if (!question) return;
+    $('#qprog').textContent = `Pregunta ${game.q_index + 1} de ${game.q_total}`;
+    $('#qtext').textContent = question.text;
+    const html = optsHTML(question);
+    if ($('#qopts').dataset.k !== String(game.q_index)) { $('#qopts').innerHTML = html; $('#qopts').dataset.k = game.q_index; }
+    $('#acount').textContent = game.answer_count;
+  }
+
+  async function renderReveal(){
+    show('reveal');
+    if (!question) return;
+    $('#rprog').textContent = `Pregunta ${game.q_index + 1} de ${game.q_total}`;
+    $('#rtext').textContent = question.text;
+    $('#rnote').textContent = question.note || '';
+    $('#b-next').textContent = game.q_index + 1 >= game.q_total ? 'Ver podio' : 'Siguiente pregunta';
+    const top = ranking().slice(0, 5);
+    $('#rboard').innerHTML = top.map((p, i) => `<div class="row"><span class="r">${i + 1}</span><span>${esc(p.name)}</span><span class="s">${p.score}</span></div>`).join('') || '<p style="color:var(--muted)">Sin jugadores.</p>';
+    const k = 'r' + game.q_index;
+    if ($('#ropts').dataset.k !== k) {
+      $('#ropts').innerHTML = optsHTML(question, { correct: question.correct });
+      $('#ropts').dataset.k = k;
+      const { data } = await sb.from('answers').select('choice').eq('game_id', game.id).eq('q_index', game.q_index);
+      const counts = {}; (data || []).forEach(a => counts[a.choice] = (counts[a.choice] || 0) + 1);
+      $('#ropts').innerHTML = optsHTML(question, { correct: question.correct, counts });
+    }
+  }
+
+  function renderFinal(){
+    show('final');
+    const r = ranking();
+    const order = [1, 0, 2]; // 2nd, 1st, 3rd
+    $('#podium').innerHTML = order.filter(i => r[i]).map(i => `<div class="pd p${i + 1}"><span class="nm">${esc(r[i].name)}</span><span class="sc">${r[i].score} pts</span><div class="bar">${i + 1}</div></div>`).join('');
+    const rest = r.slice(3);
+    $('#rest-wrap').hidden = !rest.length;
+    $('#rest').innerHTML = rest.map((p, i) => `<div class="row"><span class="r">${i + 4}</span><span>${esc(p.name)}</span><span class="s">${p.score}</span></div>`).join('');
+  }
+
+  // Timer + auto reveal
+  setInterval(() => {
+    if (!game || game.state !== 'question' || !game.q_started_at) return;
+    const end = new Date(game.q_started_at).getTime() + game.q_time_limit * 1000;
+    const left = Math.max(0, Math.ceil((end - now()) / 1000));
+    const t = $('#timer'); t.textContent = left; t.classList.toggle('low', left <= 5);
+    const allIn = players.length > 0 && game.answer_count >= players.length;
+    if ((left === 0 || allIn) && revealing !== game.q_index) { revealing = game.q_index; reveal(); }
+  }, 200);
+
+  async function reveal(){
+    const { error } = await sb.rpc('host_reveal', { p_game: host.game_id, p_secret: host.host_secret });
+    if (error) revealing = -1;
+    refresh(true);
+  }
+  async function next(){
+    if (advancing) return; advancing = true;
+    try { await sb.rpc('host_next', { p_game: host.game_id, p_secret: host.host_secret }); await refresh(true); }
+    finally { advancing = false; }
+  }
+
+  $('#b-create').addEventListener('click', async () => {
+    $('#b-create').disabled = true; $('#start-msg').textContent = '';
+    const { data, error } = await sb.rpc('create_game');
+    $('#b-create').disabled = false;
+    if (error) { $('#start-msg').textContent = 'No se pudo crear la partida. Revisá la conexión.'; return; }
+    host = data; saveHost(); subscribe(); refresh(true);
+  });
+  $('#b-start').addEventListener('click', next);
+  $('#b-next').addEventListener('click', next);
+  $('#b-skip').addEventListener('click', () => { if (game && game.state === 'question') { revealing = game.q_index; reveal(); } });
+  $('#b-new').addEventListener('click', () => { host = null; game = null; players = []; question = null; qLoadedFor = null; try { localStorage.removeItem(KEY); } catch {} if (channel) sb.removeChannel(channel); render(); });
+  document.addEventListener('keydown', e => {
+    if (e.key !== ' ' && e.key !== 'Enter') return;
+    if (game && game.state === 'reveal') { e.preventDefault(); next(); }
+  });
+
+  // Safety net: poll every 3 s in case a realtime event is missed.
+  setInterval(() => { if (host && !document.hidden) refresh(true); }, 3000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && host) { syncClock(); refresh(true); } });
+
+  (async function init(){
+    await syncClock();
+    const saved = loadHost();
+    if (saved && saved.game_id) {
+      host = saved;
+      await fetchGame();
+      if (!game || game.state === 'final') { if (!game) { host = null; try { localStorage.removeItem(KEY); } catch {} } }
+      if (host) { subscribe(); await refresh(true); return; }
+    }
+    render();
+  })();
+})();
+</script>
+</body>
+</html>
