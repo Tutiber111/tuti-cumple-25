@@ -63,6 +63,17 @@ h1 span{color:var(--accent)}
 .pd.p1 .bar{height:260px;background:var(--accent);color:#140A04;border-color:var(--accent)}
 .pd.p2 .bar{height:190px}
 .pd.p3 .bar{height:140px}
+.pd .bar{transition:height .9s cubic-bezier(.2,.9,.3,1.2),padding .9s}
+.pd .nm,.pd .sc{transition:opacity .5s .7s,transform .5s .7s}
+.pd:not(.in) .bar{height:8px;padding-top:0;font-size:0;background:var(--surface-2);border-color:var(--line)}
+.pd:not(.in) .nm,.pd:not(.in) .sc{opacity:0;transform:translateY(12px)}
+.pd.p1.in .nm{font-size:40px;color:var(--accent)}
+.suspense{text-align:center;font-size:clamp(28px,3.4vw,48px);font-weight:600;letter-spacing:-.03em;min-height:1.3em;margin-top:8px}
+.suspense.drum{animation:drum .5s ease-in-out infinite alternate}
+@keyframes drum{from{transform:scale(1);opacity:.75}to{transform:scale(1.06);opacity:1}}
+.fade{transition:opacity .8s}
+.fade.off{opacity:0;pointer-events:none}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:20;width:100%;height:100%}
 .rest{max-width:560px;width:100%;margin:28px auto 0}
 .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px}
 .status-dot.off{background:var(--bad)}
@@ -130,11 +141,13 @@ h1 span{color:var(--accent)}
       <span class="kicker">Resultados finales</span>
       <h1 style="font-size:clamp(40px,5vw,72px)">Podio<span>.</span></h1>
     </div>
+    <div class="suspense" id="suspense"></div>
     <div class="podium" id="podium"></div>
-    <div class="board rest" id="rest-wrap"><div id="rest"></div></div>
-    <div class="foot" style="margin-top:24px"><button class="btn ghost" id="b-new">Nueva partida</button></div>
+    <div class="board rest fade off" id="rest-wrap"><div id="rest"></div></div>
+    <div class="foot fade off" id="final-foot" style="margin-top:24px"><button class="btn ghost" id="b-new">Nueva partida</button></div>
   </section>
 </main>
+<canvas id="confetti" aria-hidden="true"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -276,14 +289,46 @@ h1 span{color:var(--accent)}
     }
   }
 
+  // Podium reveal, once per game: 3rd, then 2nd, a drumroll, then the winner.
+  // Phones (jugar.html) hold back each player's result for the same 13 s.
+  const REVEAL = { third: 2000, second: 5500, drum: 8500, first: 12500, rest: 15000 };
+  let finalShownFor = null, finalTimers = [];
   function renderFinal(){
     show('final');
+    if (finalShownFor === game.id) return;
+    finalShownFor = game.id;
+    finalTimers.forEach(clearTimeout); finalTimers = [];
     const r = ranking();
     const order = [1, 0, 2]; // 2nd, 1st, 3rd
-    $('#podium').innerHTML = order.filter(i => r[i]).map(i => `<div class="pd p${i + 1}"><span class="nm">${esc(r[i].name)}</span><span class="sc">${r[i].score} pts</span><div class="bar">${i + 1}</div></div>`).join('');
+    $('#podium').innerHTML = order.filter(i => r[i]).map(i => `<div class="pd p${i + 1}" id="pd${i + 1}"><span class="nm">${esc(r[i].name)}</span><span class="sc">${r[i].score} pts</span><div class="bar">${i + 1}</div></div>`).join('');
     const rest = r.slice(3);
-    $('#rest-wrap').hidden = !rest.length;
     $('#rest').innerHTML = rest.map((p, i) => `<div class="row"><span class="r">${i + 4}</span><span>${esc(p.name)}</span><span class="s">${p.score}</span></div>`).join('');
+    $('#rest-wrap').hidden = !rest.length;
+    $('#rest-wrap').classList.add('off'); $('#final-foot').classList.add('off');
+    const sus = $('#suspense');
+    const at = (ms, fn) => finalTimers.push(setTimeout(fn, ms));
+    const place = n => { const el = $('#pd' + n); if (el) el.classList.add('in'); };
+    sus.className = 'suspense'; sus.textContent = 'Y el podio es…';
+    at(REVEAL.third,  () => { sus.textContent = r[2] ? 'Tercer puesto' : ''; place(3); });
+    at(REVEAL.second, () => { sus.textContent = r[1] ? 'Segundo puesto' : ''; place(2); });
+    at(REVEAL.drum,   () => { sus.textContent = 'Y el ganador es…'; sus.classList.add('drum'); });
+    at(REVEAL.first,  () => { sus.classList.remove('drum'); sus.textContent = r[0] ? '¡' + r[0].name + '!' : ''; place(1); confetti(); });
+    at(REVEAL.rest,   () => { $('#rest-wrap').classList.remove('off'); $('#final-foot').classList.remove('off'); });
+  }
+
+  function confetti(){
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const cv = $('#confetti'), ctx = cv.getContext('2d');
+    const W = cv.width = innerWidth, H = cv.height = innerHeight;
+    const cols = ['#FF6B2E','#E5484D','#3E6FF0','#E8A400','#26A867','#F1F1EC'];
+    const ps = Array.from({ length: 220 }, () => ({ x: W / 2 + (Math.random() - .5) * W * .3, y: H * .45, vx: (Math.random() - .5) * 22, vy: -Math.random() * 22 - 6, s: Math.random() * 9 + 5, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[Math.random() * cols.length | 0] }));
+    let f = 0;
+    (function step(){
+      ctx.clearRect(0, 0, W, H);
+      for (const p of ps) { p.vy += .45; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); }
+      if (++f < 240) requestAnimationFrame(step); else ctx.clearRect(0, 0, W, H);
+    })();
   }
 
   // Timer + auto reveal
@@ -317,7 +362,7 @@ h1 span{color:var(--accent)}
   $('#b-start').addEventListener('click', next);
   $('#b-next').addEventListener('click', next);
   $('#b-skip').addEventListener('click', () => { if (game && game.state === 'question') { revealing = game.q_index; reveal(); } });
-  $('#b-new').addEventListener('click', () => { host = null; game = null; players = []; question = null; qLoadedFor = null; try { localStorage.removeItem(KEY); } catch {} if (channel) sb.removeChannel(channel); render(); });
+  $('#b-new').addEventListener('click', () => { finalTimers.forEach(clearTimeout); finalShownFor = null; host = null; game = null; players = []; question = null; qLoadedFor = null; try { localStorage.removeItem(KEY); } catch {} if (channel) sb.removeChannel(channel); render(); });
   document.addEventListener('keydown', e => {
     if (e.key !== ' ' && e.key !== 'Enter') return;
     if (game && game.state === 'reveal') { e.preventDefault(); next(); }

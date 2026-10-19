@@ -233,11 +233,25 @@ form .btn{width:100%;font-size:18px;padding:16px}
     $('#res-note').textContent = (data && data.is_correct ? '' : right) + note;
   }
 
+  // Hold the result back while the TV reveals the podium (trivia.html REVEAL.first + 0.5 s).
+  const HOLD_MS = 13000;
+  let finalSeenFor = null, finalSeenAt = 0, finalTimer = null;
   function renderFinal(){
     show('final');
+    if (finalSeenFor !== game.id) { finalSeenFor = game.id; finalSeenAt = Date.now(); }
+    const wait = HOLD_MS - (Date.now() - finalSeenAt);
+    if (wait > 0) {
+      $('#fin-rank').textContent = '';
+      $('#fin-title').textContent = 'Mirá la pantalla grande.';
+      $('#fin-sub').textContent = 'Se viene el podio…';
+      $('#b-leave').hidden = true;
+      clearTimeout(finalTimer); finalTimer = setTimeout(renderFinal, wait);
+      return;
+    }
+    $('#b-leave').hidden = false;
     $('#fin-rank').textContent = myRank ? '#' + myRank : '';
     $('#fin-title').textContent = myRank === 1 ? 'Ganaste.' : myRank && myRank <= 3 ? 'Podio.' : 'Buen intento.';
-    $('#fin-sub').textContent = `${myScore} puntos. Mirá el podio en la pantalla grande.`;
+    $('#fin-sub').textContent = `${myScore} puntos.`;
   }
 
   // Countdown on the phone
