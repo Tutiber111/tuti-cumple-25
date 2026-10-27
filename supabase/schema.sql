@@ -215,3 +215,9 @@ begin
     'note',    case when v_game.state in ('reveal','final') then v_q.note end
   );
 end $$;
+
+-- Migration 3 (applied): 3 more questions ---------------------------------
+insert into public.questions (idx, text, options, correct, note, time_limit, image) values
+  (10, '¿Cuál es la única carrera de F1 que Tuti vio en persona?', '["Barcelona 2022","Monza 2023","Bélgica 2022","San Pablo 2023"]', 0, null, 20, null),
+  (11, 'La policía una vez allanó esta casa.', '["Verdadero","Falso"]', 0, null, 15, null),
+  (12, 'Esto lo causó Tuti.', '["Verdadero","Falso"]', 1, null, 15, '/img/q-auto.jpg');
