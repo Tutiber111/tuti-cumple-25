@@ -295,7 +295,15 @@ form .btn{width:100%;font-size:18px;padding:16px}
     if (p) $('#pin-in').value = p.replace(/\D/g, '').slice(0, 6);
     await syncClock();
     const saved = load();
-    if (saved && saved.me) { me = saved.me; answered = saved.answered || {}; subscribe(); refresh(); return; }
+    if (saved && saved.me) {
+      // Only resume a saved session if it belongs to a game that is still running
+      // and matches the PIN in the link (a new QR code means a new game).
+      const urlPin = p ? p.replace(/\D/g, '').slice(0, 6) : null;
+      const { data: g, error } = await sb.from('games').select('pin,state').eq('id', saved.me.game_id).maybeSingle();
+      const stale = !error && (!g || g.state === 'final' || (urlPin && g.pin !== urlPin));
+      if (!stale) { me = saved.me; answered = saved.answered || {}; subscribe(); refresh(); return; }
+      try { localStorage.removeItem(KEY); } catch {}
+    }
     show('join');
     if (p) $('#name-in').focus();
   })();
